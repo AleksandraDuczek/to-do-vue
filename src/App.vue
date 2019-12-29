@@ -16,10 +16,10 @@
     </div>
       <div class="row py-2">
         <div class="col">
-          <input v-model="newItemText" class="form-control"/>
+          <input v-on:keyup.enter="addNewTodo" v-model="newItemText" class="form-control"/>
         </div>
         <div class="col-2">
-          <button class="btn btn-primary" v-on:click="addNewTodo">
+          <button v-on:click="addNewTodo" class="btn btn-primary">
             Dodaj
           </button>
         </div>
@@ -37,46 +37,39 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'app',
-  // components: {
-  //   HelloWorld
-  // }
   data() {
       return {
-          name: "X",
-          tasks: [
-              {
-                  action: "Kupić kwiaty", done: false,
-              },
-              {
-                  action: "Znaleźć buty", done: true,
-              },
-              {
-                  action: "Zadzwonić do mamy", done: false
-              }
-          ],
+          name: "Olcia Duczek",
+          tasks: [],
           hideCompleted: true,
           newItemText: '',
       }
   },
-    computed: {
-      filteredTasks() {
-          return this.hideCompleted ?
-              this.tasks.filter(task => !task.done) : this.tasks
-      }
-    },
-    methods: {
-      addNewTodo() {
-          this.tasks.push({
-              action: this.newItemText,
-              done: false
-          });
-          this.newItemText = '';
-      }
+  computed: {
+    filteredTasks() {
+        return this.hideCompleted ?
+            this.tasks.filter(task => !task.done) : this.tasks
     }
+  },
+  methods: {
+    addNewTodo() {
+        this.tasks.push({
+            action: this.newItemText,
+            done: false
+        });
+        localStorage.setItem("todos", JSON.stringify(this.tasks));
+        this.newItemText = '';
+    },
+  },
+  created() {
+      let data = localStorage.getItem("todos");
+      if (data != null) {
+          this.tasks = JSON.parse(data);
+      }
+  },
 }
 </script>
 
